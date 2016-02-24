@@ -1,0 +1,12 @@
+"start time",name,type,role,tags,description
+00:03:38,"Declan Alexander McLeman",annotation,student,Error,"This property is wrong.It is supposed to be a+(b+c)=(a+b)+c"
+00:09:07,"Declan Alexander McLeman",annotation,student,Error,"The second last value should be 2"
+00:01:02,"Declan Alexander McLeman",annotation,student,Start,"The conjunction"
+00:01:39,"Declan Alexander McLeman",annotation,student,next,"The disjunction"
+00:09:32,"Declan Alexander McLeman",annotation,student,"Final annotation","Two Boolean expressions are equivalent if their truth tables are equal"
+----,"Declan Alexander McLeman",comment,student,Summarisation,"There are three operations on a boolean value: conjunction(AND), disjunction(OR) or negation(!=1).There is only one proper error, and that is in the properties section, where a+(b+c)=(a+b)c, when it is supposed to be: a+(b+c)=(a+b)+c.Also, if the results are not restricted to being 0 or 1, the second last result in the truth table should be 2, not 1. Two expressions are assumed equal if their respective truth tables are equal."
+----,"Madeline Frances Kim Pham",comment,student,Summary,"Boolean AlgebraTwo components:1). Values (0 and 1)2). Operations (Conjunction, disjunction and negation)Symbols used to represent operandsConjunction: ab = a*b-Returns 1 if both symbols are 1-Returns 0 otherwiseDisjunction: a+b-Returns 1 if either a or b is equal to 1-Returns 0 otherwiseNegation: a'-Returns the opposite value of the operand Properties:-Conjunction and disjunction are commutative and associative-(a')' = aBoolean Expressions:example: xy+z'Truth Table:Two rules:1). As many rows as possible combinations of symbol values2). One column for each symbol and one column for each result-Truth tables represent all of the possible results of a boolean expression-If two separate boolean expressions have identical truth tables, they are equivalent"
+00:00:59,"Madeline Frances Kim Pham",annotation,student,Conjunction,
+00:01:01,"Madeline Frances Kim Pham",annotation,student,Conjunction,
+00:01:39,"Madeline Frances Kim Pham",annotation,student,Disjunction,
+00:09:58,"Madeline Frances Kim Pham",annotation,student,Equivalence,"Two boolean expressions are equivalent if they have identical truth tables"

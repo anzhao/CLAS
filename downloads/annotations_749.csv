@@ -1,0 +1,24 @@
+"start time",name,type,role,tags,description
+00:00:34,"Yuk Chuk Siu",annotation,student,"The two ingredients needed to define the encoding of a set of symbols.","The two ingredients needed to define the encoding of a set of symbols."
+00:00:46,"Yuk Chuk Siu",annotation,student,,"The two ingredients needed to define the encoding of a set of symbols are 1) decide how many bits are we going to use in encoding  and 2) define a correspondence between symbols and binary encoding.Size of Encodingwith 'n' bits --&gt;  we have 2^n combinations and 2^n must be greater or equal to number of elements in a set.How to encode Characters?"
+00:04:41,"Yuk Chuk Siu",annotation,student,"The definition of a catalog of correspondence","The definition of a catalog of correspondence"
+00:05:30,"Yuk Chuk Siu",annotation,student,"The second operand of the symbols in UAL-1","The second operand of the symbols in UAL-1"
+----,"Yuk Chuk Siu",comment,student,summary,"The two ingredients needed to define the encoding of a set of symbols are 1) decide how many bits are we going to use in encoding  and 2) define a correspondence between symbols and binary encoding.Size of Encoding with 'n' bits ,  we have 2^n combinations and 2^n must be greater or equal to number of elements in a set.How to encode Characters?using the concept of catalog of correspondencenowadays computers use Unicode to encode charactersUAL-1consisting of 3 elements: code, operand 1 and operand 2.where code is divided into four possible values: ADD, SUB, MUL, DIVand operand 1 and 2 are divided into 256 possible values ranging from 0 to 255UAL-1 can also have 4*256*256 = 2^18 symbols meaning it will at least have 18 bits.Scheme: for a 24 bits encoding2 bits are for the 'Code'8 bits are for the 'Operand 1'8 bits are for the 'Operand 2'another 8 bits are zeros"
+00:00:34,"Vincent Yao Wu",annotation,student,"the two ingredients",
+00:04:47,"Vincent Yao Wu",annotation,student,,
+00:10:05,"Vincent Yao Wu",annotation,student,"2nd operand",
+00:00:30,"Sarah Louise Murphy",annotation,student,,"Two ingredients needed to define the encoding of a set of symbols"
+----,"Sarah Louise Murphy",comment,student,,"The video illustrates the rules for encoding informationi) The size of the encoding is determined by the number of possible combinations of the encoding that existii) The catalogue of correspondence is an arbitrary set of rules to map each value to its encoding"
+00:05:30,"Sarah Louise Murphy",annotation,student,,"The second operand of the symbols in UAL-1"
+00:03:38,"Sarah Louise Murphy",annotation,student,,"Catalogue of Correspondence"
+00:01:10,"Siyi Chen",annotation,student,"the two ingredients needed to define the encoding of a set of symbols.",
+00:04:46,"Siyi Chen",annotation,student,"the definition of a catalog of correspondence","the definition of a catalog of correspondence"
+----,"Siyi Chen",comment,student,,"This video explained how to encode sets of symbols.We need to encode symbols as 24 bits, with 2 bits of code (ADD 00, MUL 10, SUB 01, DIV 11), 8 bits of operand 1,  8 bits of operand 2 and 6 bits all zeros."
+00:01:09,"Wing Kiu Ng",annotation,student,,"The two ingredients needed to define the encoding of a set of symbols:-the number of bits-the correspondence symbols (binary encoding)"
+00:04:50,"Wing Kiu Ng",annotation,student,,"A catalog of correspondence is a table that shows all the characters and their corresponding codes"
+00:06:11,"Wing Kiu Ng",annotation,student,,"the 2nd operand can have any number between 0 and 255"
+----,"Wing Kiu Ng",comment,student,,"The video describes the method for encoding symbols. What determine this type of encoding include the number of bits and the corresponding symbols. The number of bits is related to the number of combinations. For example if there are 8 combinations, 3 bits are needed since 8 = 2^3. The bits are represented by the power of base 2.UAL- 1 is another way for encoding symbols. It is determined by three parts: the code, operand 1 and operand 2. The code consists of (ADD, SUB, MUL, DIV) while both operands can have any number between 0 and 255."
+----,"Brendan Allan March",comment,student,,"This video describes how to encode a set of symbols.1) Choose no. of bits (n) to encode set symbols with, using the formula 2^n &gt;= |Set|.2) Describe how the symbols are going to be encoded [ie: how to interpret the string of n bits].The video then gives an example of this process."
+00:00:29,"Brendan Allan March",annotation,student,,"The two ingredients needed to define the encoding of a set of symbols."
+00:03:26,"Brendan Allan March",annotation,student,,"While not explicitly defined, this Unicode character tables shows what a catalog of correspondence is."
+00:06:07,"Brendan Allan March",annotation,student,,"The second operand in the 'UAL-1' example encoding is defined."
