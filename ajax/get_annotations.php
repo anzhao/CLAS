@@ -46,4 +46,3 @@ if (count($annotations) > 0) {
 
 $jsonString .= json_encode($annotations);
 print $jsonString;
-?>

@@ -14,4 +14,3 @@ $groups         = $user->getGroupsByClassAndOwner($classID, $userID);
 $user->close(); 
 
 print json_encode($groups);
-?>

@@ -16,4 +16,3 @@ endSession();
 // kill Shibboleth session
 header("Location: $logoutURL");
 exit;
-?>

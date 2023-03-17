@@ -704,4 +704,3 @@ print "<br />";
 }
 print_r($users->getClassesUserBelongsTo(4));
 */
-?>

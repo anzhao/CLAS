@@ -42,4 +42,3 @@
     
     $entryID = uploadToKaltura($fileToUpload, $title, $description, $data);
     writeToLog("$file: title $title -> upload finished at " . date("H:i:s") . ", result entry_id $entryID\n");
-?>

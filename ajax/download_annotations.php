@@ -92,5 +92,3 @@ header("Content-Disposition: inline; filename=".$fname);
 header("Pragma: no-cache");
 header("Expires: 0");
 readfile($fname);
-
-?>

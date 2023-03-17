@@ -21,4 +21,3 @@ $users->close();
 $jsonString .= json_encode($visible);
 //print "jsonString ";
 print $jsonString;
-?>

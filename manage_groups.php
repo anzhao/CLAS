@@ -37,7 +37,7 @@ if ($usingIE) die("<html style='background-color:#eee;'><body><div style='color:
 $userName   = $_SESSION['name'];
 $userID     = $_SESSION['user_id'];
 
-if (! isAdmin($_SESSION['role'])) die($adminPrivRequiredMsg);
+if (!isAdmin($_SESSION['role'])) die($adminPrivRequiredMsg);
 
 
 $user = new users();
@@ -61,11 +61,11 @@ $className = $user->getClassName($classID);
 
 //print "before formSubmitted<br />";
 if (formSubmitted()) {
-//print_r($_POST);
+    //print_r($_POST);
     processForm();
 }
 
-if (! empty($groups)) $groupMembers = $user->getGroupMembers($groupID);
+if (!empty($groups)) $groupMembers = $user->getGroupMembers($groupID);
 //print_r($groupMembers);
 //print_r($groups);
 
@@ -78,239 +78,244 @@ foreach ($classList as $student) {
 displayForm();
 
 
-function processForm() {
-    global $user, $userID, $classID, $className, $groupID;    
+function processForm()
+{
+    global $user, $userID, $classID, $className, $groupID;
 
     $action         = $_POST['submit'];
     $groupName      = $className . " - " . $_POST['group-name'];
     $groupMembers   = $_POST['group-members'];
 
     $url = "{$_SERVER["SCRIPT_NAME"]}?class_id=$classID";
-//print "in processForm()<br />";
+    //print "in processForm()<br />";
     switch ($action) {
         case CREATE_GROUP:
-//print "creating<br />";            
+            //print "creating<br />";            
             $groupID = $user->createGroup($groupName, $groupMembers, $userID, $classID);
-//            $user->getClassInstructorsAndTAs($groupID);
+            //            $user->getClassInstructorsAndTAs($groupID);
             $groups  = $user->getGroupsByOwner($userID);
             header("location: $url&group_id=$groupID");
-            break;               
+            break;
         case UPDATE_GROUP:
-//print "updating<br />";
-//print "groupID: $groupID<br />";
-//print_r($groupMembers);
+            //print "updating<br />";
+            //print "groupID: $groupID<br />";
+            //print_r($groupMembers);
             $user->updateGroup($groupID, $groupMembers);
             // if this group is assigned to a video then update videoACL
             $media = new media();
             $media->updateVideoACL($groupID);
             $media->close();
-            break;               
+            break;
         case DELETE_GROUP:
-//print "deleting<br />";            
+            //print "deleting<br />";            
             $user->deleteGroup($groupID);
             header("location: $url");
             exit();
         case CANCEL:
-//print "cancelling<br />";            
+            //print "cancelling<br />";            
             header("location: $url&group_id=$groupID");
             exit();
         default:
-//print "doing nothing";
+            //print "doing nothing";
             exit();
     }
-//print_r($_POST);
+    //print_r($_POST);
 }
 
 
-function displayForm() {
-    global $classes, $classList, $className, $groups, $classID, $groupID, $groupMembers, $userName;    
+function displayForm()
+{
+    global $classes, $classList, $className, $groups, $classID, $groupID, $groupMembers, $userName;
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Manage user groups</title>
-<script type="text/javascript" src="kaltura-html5player-widget/jquery-1.4.2.min.js"></script>
-<script type="text/javascript">
-function jumpBoxClass(list) {
-    var url = "manage_groups.php?class_id=" + $('#class').val();
-//alert(list.options[list.selectedIndex].value);
-//console.log("jumpBoxClass " + url);
-    location.href = url;
-}
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
 
-function jumpBoxGroup(list) {
-    var url = "manage_groups.php?class_id=<?php=$classID?>" + "&group_id=" + $('#group').val();
-//console.log("jumpBoxClass " + url);
-    location.href = url;
-}
-
-$(document).ready(function() {
-    $('#update-conversion-status').click(function() {
-        //alert('Handler for .click() called.');
-        window.location.reload();
-    });
-
-    // fetch groups for given class
-    $('#class').change(function() {
-
-    });
-
-    $('#group').change(function() {
-
-    });
-
-    $("#update-groups").submit(function () {
-//alert("submit-button.val() " + $("input[type=submit]:focus").val());
-        if ("delete group" == $("input[type=submit]:focus").val()) {
-            if (confirm("Are you sure you want to delete this group?")) {
-                return true;
-            } else {
-                return false;
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Manage user groups</title>
+        <script type="text/javascript" src="kaltura-html5player-widget/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript">
+            function jumpBoxClass(list) {
+                var url = "manage_groups.php?class_id=" + $('#class').val();
+                //alert(list.options[list.selectedIndex].value);
+                //console.log("jumpBoxClass " + url);
+                location.href = url;
             }
-        }
-    });
 
-    $('#create-group').click(function() {
-        showCreateGroup();
-        // deselect any class members 
-        $('#group-members option').each(function(index) {
-            $(this).removeAttr("selected");
-        });
-          
-    });
-    $('#update-group').click(function() {
-        $('.create-group').css('display', 'none');
-        $('#create-group').css('display', 'inline');
-        $('.update-group').css('display', 'inline');
-        $('#update-group').css('display', 'none');
-        $('title').text("Update User Groups");
-        $('legend').text("Update User Groups");
-    });
-    function showCreateGroup(groupsExist) {
-        $('.create-group').css('display', 'inline');
-        $('#create-group').css('display', 'none');
-        $('.update-group').css('display', 'none');
-//        if (groupsExist) $('#update-group').css('display', 'inline');
-        $('title').text("Create User Group");
-        $('legend').text("Create User Group");
-    }
+            function jumpBoxGroup(list) {
+                var url = "manage_groups.php?class_id=<? php = $classID ?>" + "&group_id=" + $('#group').val();
+                //console.log("jumpBoxClass " + url);
+                location.href = url;
+            }
 
-});
+            $(document).ready(function() {
+                $('#update-conversion-status').click(function() {
+                    //alert('Handler for .click() called.');
+                    window.location.reload();
+                });
 
-</script>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link rel="stylesheet" type="text/css" href="admin-page.css" />
-</head>
-<body>
-<div id="wrapper">
-<?php 
-    printAdminBar(false,$userName);     
-    if (empty($groups)) {
-        $createStyle    = "display:inline";
-        $updateStyle    = "display:none";
-        $legend         = "Create User Group";
-        $msg            = "<p style=\"font-weight:bold;\">There are no groups associated with this class.<br />Please create a group.</p>";
-    } else {
-        $createStyle    = "display:none";
-        $updateStyle    = "display:inline";
-        $legend         = "Manage User Groups";
-    }
-?>
-<div style="clear:both"></div>
-<?php echo $msg?>
-<div class="form">
-<h3><?php echo $legend?></h3>
-<form id="update-groups" name="update-groups" method="post" action="">
-    <label>select class
-    <select name="class" id="class" onchange="jumpBoxClass()">
-<?php
-//print "classID: $classID"; 
-    foreach ($classes as $class) {
-//print_r($class);        
-        $ID     = $class['ID'];
-        $name   = $class['name']; 
-        ($classID == $ID) ? $selected="selected=\"selected\"" : $selected="";
-        print "\t<option value=\"$ID\" $selected>$name</option>\n";
-    }                
-?>
-    </select>
-    </label>
-    <strong style="padding-left:10px;"><?php echo count($classList)?></strong> students have accounts
-    <br />
-    <div class="create-group" style="<?php echo $createStyle?>">
-        <label style="width:180px;">new group name<br />
-            <span style="float:left;background-color:#D9E2E9;padding-left:2px;"><?php echo "$className - "?>&nbsp;<input type="text" name="group-name" size="20" id="group-name" maxlength="45" style="float:right" /></span>
-        </label>
-    </div>
-    <div class="update-group" style="<?php echo $updateStyle?>">
-        <span id="create-group" class="create-group" style="float:right;padding-right:300px;color:#black;text-decoration:underline;cursor:pointer;">create new group</span>
-        <label>
-        edit group
-        <select name="group" id="group" onchange="jumpBoxGroup()">
-<?php    
-    foreach ($groups as $ID=>$name) {
-//print "selected$selected<br />";        
-        ($groupID == $ID) ? $selected="selected=\"selected\"" : $selected="";
-        print "\t<option value=\"$ID\" $selected>$name</option>\n";
-    }
-?>
-        </select>
-        </label>
-    </div>        
-    <br style="clear:left" />
-    <label>group members
-    <div style="position:relative;top:150px;left:240px;">(instructors and TAs are automatically included in groups)</div>
-    <select name="group-members[]" size="20" multiple="multiple" id="group-members">
-<?php
-    foreach ($classList as $member) {
-//print_r($member);
-        // if the userName is not initialized
-        (" " == ($member["name"])) ? $userName="--- NAME UNINITIALIZED" : $userName=$member["name"];
-        $userID     = $member["ID"];
+                // fetch groups for given class
+                $('#class').change(function() {
 
-        (in_array($userID, $groupMembers)) ? $selected="selected=\"selected\"" : $selected="";
-        if ($member["is_instructor"]) { 
-            $style="style=\"font-weight:bold;\"";
-            $userName .= " (Instructor)";
-        } elseif ($member["is_ta"]) {
-            $style="style=\"font-weight:bold;\"";
-            $userName .= " (TA)";
-        } else {
-            // $member["is_student"]
-            $style="";
-        }
-?>
-                <option value="<?php echo $userID?>" <?php echo $selected . $style ?> ><?php echo "$userName"?></option>
-<?php } ?>
-    </select>
-    </label>
-    <label>
-    <br />
-    <div class="create-group" style="<?php echo $createStyle?>">
-        <input type="submit" name="submit" id="create-group" value="<?php echo CREATE_GROUP?>" />
-        <input type="submit" name="submit" id="cancel" value="<?php echo CANCEL?>" />
-    </div>
-    <div class="update-group" style="<?php echo $updateStyle?>">
-        <input type="submit" name="submit" id="update-group" value="<?php echo UPDATE_GROUP?>" />
-        <input type="submit" name="submit" id="delete-group" value="<?php echo DELETE_GROUP?>" />
-    </div>
-    <br />
-    <br />
-    <strong>Note:</strong> to make a non-contiguous selection hold the CTRL key while making selection
-    </label>
-</form>
-</div>
-</div> <!-- wrapper for page centering -->
-<!-- <div id="univbranding"><img src="icons/LearnngTchngUnt_12_01.png"></img></div>  -->
+                });
 
-<!-- <div id="mydiv">
+                $('#group').change(function() {
+
+                });
+
+                $("#update-groups").submit(function() {
+                    //alert("submit-button.val() " + $("input[type=submit]:focus").val());
+                    if ("delete group" == $("input[type=submit]:focus").val()) {
+                        if (confirm("Are you sure you want to delete this group?")) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+
+                $('#create-group').click(function() {
+                    showCreateGroup();
+                    // deselect any class members 
+                    $('#group-members option').each(function(index) {
+                        $(this).removeAttr("selected");
+                    });
+
+                });
+                $('#update-group').click(function() {
+                    $('.create-group').css('display', 'none');
+                    $('#create-group').css('display', 'inline');
+                    $('.update-group').css('display', 'inline');
+                    $('#update-group').css('display', 'none');
+                    $('title').text("Update User Groups");
+                    $('legend').text("Update User Groups");
+                });
+
+                function showCreateGroup(groupsExist) {
+                    $('.create-group').css('display', 'inline');
+                    $('#create-group').css('display', 'none');
+                    $('.update-group').css('display', 'none');
+                    //        if (groupsExist) $('#update-group').css('display', 'inline');
+                    $('title').text("Create User Group");
+                    $('legend').text("Create User Group");
+                }
+
+            });
+        </script>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <link rel="stylesheet" type="text/css" href="admin-page.css" />
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <?php
+            printAdminBar(false, $userName);
+            if (empty($groups)) {
+                $createStyle    = "display:inline";
+                $updateStyle    = "display:none";
+                $legend         = "Create User Group";
+                $msg            = "<p style=\"font-weight:bold;\">There are no groups associated with this class.<br />Please create a group.</p>";
+            } else {
+                $createStyle    = "display:none";
+                $updateStyle    = "display:inline";
+                $legend         = "Manage User Groups";
+            }
+            ?>
+            <div style="clear:both"></div>
+            <?php echo $msg ?>
+            <div class="form">
+                <h3><?php echo $legend ?></h3>
+                <form id="update-groups" name="update-groups" method="post" action="">
+                    <label>select class
+                        <select name="class" id="class" onchange="jumpBoxClass()">
+                            <?php
+                            //print "classID: $classID"; 
+                            foreach ($classes as $class) {
+                                //print_r($class);        
+                                $ID     = $class['ID'];
+                                $name   = $class['name'];
+                                ($classID == $ID) ? $selected = "selected=\"selected\"" : $selected = "";
+                                print "\t<option value=\"$ID\" $selected>$name</option>\n";
+                            }
+                            ?>
+                        </select>
+                    </label>
+                    <strong style="padding-left:10px;"><?php echo count($classList) ?></strong> students have accounts
+                    <br />
+                    <div class="create-group" style="<?php echo $createStyle ?>">
+                        <label style="width:180px;">new group name<br />
+                            <span style="float:left;background-color:#D9E2E9;padding-left:2px;"><?php echo "$className - " ?>&nbsp;<input type="text" name="group-name" size="20" id="group-name" maxlength="45" style="float:right" /></span>
+                        </label>
+                    </div>
+                    <div class="update-group" style="<?php echo $updateStyle ?>">
+                        <span id="create-group" class="create-group" style="float:right;padding-right:300px;color:#black;text-decoration:underline;cursor:pointer;">create new group</span>
+                        <label>
+                            edit group
+                            <select name="group" id="group" onchange="jumpBoxGroup()">
+                                <?php
+                                foreach ($groups as $ID => $name) {
+                                    //print "selected$selected<br />";        
+                                    ($groupID == $ID) ? $selected = "selected=\"selected\"" : $selected = "";
+                                    print "\t<option value=\"$ID\" $selected>$name</option>\n";
+                                }
+                                ?>
+                            </select>
+                        </label>
+                    </div>
+                    <br style="clear:left" />
+                    <label>group members
+                        <div style="position:relative;top:150px;left:240px;">(instructors and TAs are automatically included in groups)</div>
+                        <select name="group-members[]" size="20" multiple="multiple" id="group-members">
+                            <?php
+                            foreach ($classList as $member) {
+                                //print_r($member);
+                                // if the userName is not initialized
+                                (" " == ($member["name"])) ? $userName = "--- NAME UNINITIALIZED" : $userName = $member["name"];
+                                $userID     = $member["ID"];
+
+                                (in_array($userID, $groupMembers)) ? $selected = "selected=\"selected\"" : $selected = "";
+                                if ($member["is_instructor"]) {
+                                    $style = "style=\"font-weight:bold;\"";
+                                    $userName .= " (Instructor)";
+                                } elseif ($member["is_ta"]) {
+                                    $style = "style=\"font-weight:bold;\"";
+                                    $userName .= " (TA)";
+                                } else {
+                                    // $member["is_student"]
+                                    $style = "";
+                                }
+                            ?>
+                                <option value="<?php echo $userID ?>" <?php echo $selected . $style ?>><?php echo "$userName" ?></option>
+                            <?php } ?>
+                        </select>
+                    </label>
+                    <label>
+                        <br />
+                        <div class="create-group" style="<?php echo $createStyle ?>">
+                            <input type="submit" name="submit" id="create-group" value="<?php echo CREATE_GROUP ?>" />
+                            <input type="submit" name="submit" id="cancel" value="<?php echo CANCEL ?>" />
+                        </div>
+                        <div class="update-group" style="<?php echo $updateStyle ?>">
+                            <input type="submit" name="submit" id="update-group" value="<?php echo UPDATE_GROUP ?>" />
+                            <input type="submit" name="submit" id="delete-group" value="<?php echo DELETE_GROUP ?>" />
+                        </div>
+                        <br />
+                        <br />
+                        <strong>Note:</strong> to make a non-contiguous selection hold the CTRL key while making selection
+                    </label>
+                </form>
+            </div>
+        </div> <!-- wrapper for page centering -->
+        <!-- <div id="univbranding"><img src="icons/LearnngTchngUnt_12_01.png"></img></div>  -->
+
+        <!-- <div id="mydiv">
         <p><b>CLAS has been collaboratively developed with support from University of British Columbia, University of South Australia, University of Sydney and University of New South Wales.</b></p> <p><b>Support for the software and research has been provided by the Australian Government Office for Learning and Teaching.</b></p>
 </div>  -->
 
-</body>
-</html>
-<?php 
-} 
+    </body>
+
+    </html>
+<?php
+}
 
 ?>

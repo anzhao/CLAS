@@ -18,4 +18,3 @@ $media = new media();
 $media->updateTotalViews($userID, $videoID);
 
 $media->close();
-?>

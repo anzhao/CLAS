@@ -13,4 +13,3 @@
     $user->close(); 
 
     print json_encode($groupMembers);
-?>

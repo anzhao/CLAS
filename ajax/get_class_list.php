@@ -15,4 +15,3 @@ $classList      = $user->getClassList($classID);
 $user->close(); 
 
 print json_encode($classList);
-?>

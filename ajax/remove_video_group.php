@@ -20,5 +20,4 @@
     $media = new media();
 //print "videoID: $videoID";    
     $media->removeVideoGroup($videoID, $groupID);
-    $media->close(); 
-?>
+    $media->close();

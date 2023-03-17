@@ -11,10 +11,9 @@ $cuePosition = $_POST['cue_position'];
 
 $conn = mysql_connect('localhost', $mysqlUser, $mysqlPassword);
 if (!$conn) {
-                 die('Not connected : ' . mysql_error());
-                 }
-                 $db_selected = mysql_select_db($database, $conn);
-                 mysql_set_charset("utf8",$conn);
-                $result = mysql_query("INSERT INTO cueEvent VALUES ('$userName', 'CUE', '$videoID', '$cuePosition', NULL)");
-              ?>;
-
+  die('Not connected : ' . mysql_error());
+}
+$db_selected = mysql_select_db($database, $conn);
+mysql_set_charset("utf8", $conn);
+$result = mysql_query("INSERT INTO cueEvent VALUES ('$userName', 'CUE', '$videoID', '$cuePosition', NULL)");
+?>;

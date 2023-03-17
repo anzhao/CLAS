@@ -19,5 +19,3 @@ $annotationDB = new annotationsDB();
 $annotationID = $_POST['annotation_id'];
 $annotationDB->updateAnnotationViewCount($annotationID, $userID);
 $annotationDB->close();
-
-?>

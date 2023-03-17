@@ -10,10 +10,9 @@ $pausePosition = $_POST['pause_position'];
 
 $conn = mysql_connect('localhost', $mysqlUser, $mysqlPassword);
 if (!$conn) {
-                 die('Not connected : ' . mysql_error());
-                 }
-                 $db_selected = mysql_select_db($database, $conn);
-                 mysql_set_charset("utf8",$conn);
-                $result = mysql_query("INSERT INTO pauseEvent VALUES ('$userName', 'PAUSE', '$videoID', '$pausePosition', NULL)");
-              ?>;
-
+  die('Not connected : ' . mysql_error());
+}
+$db_selected = mysql_select_db($database, $conn);
+mysql_set_charset("utf8", $conn);
+$result = mysql_query("INSERT INTO pauseEvent VALUES ('$userName', 'PAUSE', '$videoID', '$pausePosition', NULL)");
+?>;

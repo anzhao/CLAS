@@ -81,6 +81,3 @@ switch ($DEPLOYMENT_NAME) {
 	
 		break;
 }
-
-
-?>

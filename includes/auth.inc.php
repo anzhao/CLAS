@@ -238,5 +238,3 @@ function isAdmin($role)
 {
     return (STUDENT != $role);
 }
-
-?>

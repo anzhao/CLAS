@@ -53,5 +53,3 @@ $annotationDB->addAnnotation($videoID, $userID, $userName, $startTime, $endTime,
 $annotationID = mysql_insert_id();
 
 $annotationDB->close();
-
-?>

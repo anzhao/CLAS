@@ -8,5 +8,3 @@ $userID = $_SESSION['user_id'];
 
 $video_id = $_GET['video_id'];
 getFlavorIDs($video_id);
-
-?>

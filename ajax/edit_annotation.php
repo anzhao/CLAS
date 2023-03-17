@@ -31,4 +31,3 @@ $msg = $annotationDB->updateAnnotation($id, $videoID, $userID, $userName, $start
 //print "msg:$msg";
 
 $annotationDB->close();
-?>

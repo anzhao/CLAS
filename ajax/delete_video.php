@@ -28,6 +28,4 @@
     
     $media->deleteMedia($videoID, $userID);
     
-    $media->close(); 
-       
-?>
+    $media->close();

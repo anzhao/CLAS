@@ -32,5 +32,4 @@
     }
 
     $users->close();
-    $media->close(); 
-?>
+    $media->close();

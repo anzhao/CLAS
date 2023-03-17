@@ -30,5 +30,3 @@ print "videoAnnotationID: $videoAnnotationID";
 $annotationDB->deleteAnnotation($id, $userID);
 
 $annotationDB->close();
-
-?>

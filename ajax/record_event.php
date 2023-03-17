@@ -21,4 +21,3 @@ $users->recordEvent();
 
 
 $users->close();
-?>

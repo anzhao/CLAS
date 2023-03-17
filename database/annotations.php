@@ -275,4 +275,3 @@ $annotations->deleteAnnotation($annotation_id);
 print "There are " . $annotations->countAnnotations() . " annotations in total.<br />";
 $annotations->close();
 */
-?>

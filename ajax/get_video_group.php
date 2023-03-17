@@ -14,4 +14,3 @@
     $media->close(); 
 
     print json_encode($groupID);
-?>
