@@ -11,6 +11,6 @@ $classID = $_GET['class_id'];
 
 $user           = new users();
 $groups         = $user->getGroupsByClassAndOwner($classID, $userID);
-$user->close(); 
+$user->close();
 
 print json_encode($groups);

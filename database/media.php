@@ -1,14 +1,15 @@
 <?php
 
-require_once (dirname(__FILE__) . "/../includes/global_deploy_config.php");
-require_once (dirname(__FILE__) . '/../includes/common.inc.php');
-require_once (dirname(__FILE__) . '/users.php');
+require_once(dirname(__FILE__) . "/../includes/global_deploy_config.php");
+require_once(dirname(__FILE__) . '/../includes/common.inc.php');
+require_once(dirname(__FILE__) . '/users.php');
 
 require_once("/var/www/config/clas/$configFolderName/db_config.php");
 
 error_reporting(E_ALL);
 
-class media {
+class media
+{
 	private $link;
 
 	function media()
@@ -60,14 +61,15 @@ EOF;
 			} 
 			
 		*/
-		
+
 		return $media;
 	}
-	
+
 	// For admin reporting use only
-	function getVideosByClassID($classID) {
+	function getVideosByClassID($classID)
+	{
 		if (!is_numeric($classID)) return;
-		
+
 		$query = <<<EOT
 			SELECT videoGroup.video_id as 'video_id', 
 					media.title as 'title', media.duration as 'duration' 
@@ -78,20 +80,21 @@ EOF;
 				videoGroup.video_id = media.video_id			
 			ORDER BY group_id asc
 EOT;
-		
+
 		$result = mysql_query($query, $this->link);
 		if (!$result) die('Invalid query (getVideoGroup): ' . mysql_error());
-		
+
 		$videos = array();
 		while ($row = mysql_fetch_assoc($result)) {
 			$row['title']           = stripslashes($row['title']);
 			$row['duration']        = stripslashes($row['duration']);
 			$videos[] = $row;
- 		}
+		}
 		return $videos;
 	}
 
-	function getVideosByGroupID($userID, $groupID) {
+	function getVideosByGroupID($userID, $groupID)
+	{
 		// validate input
 		if (!is_numeric($groupID)) return;
 
@@ -128,17 +131,19 @@ EOT;
 		return $media;
 	}
 
-	function updateVideoACL($groupID) {
+	function updateVideoACL($groupID)
+	{
 		$videos = $this->getVideosByGroupID($groupID);
 
-		if (! empty($videos)) {
-			foreach ($videos as $videoID=>$groupID) {
+		if (!empty($videos)) {
+			foreach ($videos as $videoID => $groupID) {
 				$this->setVideoGroup($videoID, $groupID);
 			}
 		}
 	}
 
-	function getVideoGroup($videoID) {
+	function getVideoGroup($videoID)
+	{
 		$query = "SELECT * FROM videoGroup WHERE video_id like '$videoID'";
 
 		$result = mysql_query($query, $this->link);
@@ -149,7 +154,8 @@ EOT;
 		return $row['group_id'];
 	}
 
-	function setVideoGroup($videoID, $groupID) {
+	function setVideoGroup($videoID, $groupID)
+	{
 		//print "setVideoGroup($videoID, $groupID)";
 
 		// TODO: multiple groups per video is NOT yet possible! 
@@ -184,7 +190,7 @@ EOT;
 		foreach ($groupOwners as $owner) {
 			$query = "INSERT INTO videoOwners VALUES ('$videoID', $owner)";
 			$result = mysql_query($query, $this->link);
-			
+
 			if (!$result) die('Invalid query (setVideoGroup - adding video owners): ' . mysql_error());
 		}
 
@@ -192,7 +198,8 @@ EOT;
 		$this->addUsersToVideo($videoID, $groupID, $userIDs);
 	}
 
-	function removeVideoOwners($videoID) {
+	function removeVideoOwners($videoID)
+	{
 		$query = "DELETE FROM videoOwners WHERE video_id LIKE '$videoID'";
 
 		$result = mysql_query($query, $this->link);
@@ -201,7 +208,8 @@ EOT;
 		if (!$result) die('Invalid query (removeVideoOwners): ' . mysql_error());
 	}
 
-	function removeVideoGroup($videoID) {
+	function removeVideoGroup($videoID)
+	{
 		$query = "DELETE FROM videoGroup WHERE video_id LIKE '$videoID'";
 
 		$result = mysql_query($query, $this->link);
@@ -214,7 +222,7 @@ EOT;
 
 	function addUsersToVideo($videoID, $groupID, $userIDs)
 	{
-		if (! is_null($userIDs)) {
+		if (!is_null($userIDs)) {
 			foreach ($userIDs as $userID) {
 				$query = "INSERT INTO videoAccessControlLists VALUES ('$videoID', $userID, $groupID, 0, NULL, NULL)";
 				$result = mysql_query($query, $this->link);
@@ -285,7 +293,7 @@ EOT;
 	function getViewerStatistics($userID, $videoID)
 	{
 		$query = "SELECT * FROM videoViewedBy WHERE viewed_by = $userID AND video_id like '$videoID'";
-		
+
 		$result     = mysql_query($query, $this->link);
 		$totalViews = mysql_num_rows($result);
 		//print "query: $query<br />";
@@ -304,79 +312,78 @@ EOT;
 				// end time is unknown so don't include this result
 				$duration = $endTime - $startTime;
 			}
-			$viewerStats[] = array("start_time"=>$startTime, "duration"=>$duration, "timestamp"=>$row['start_time']);
+			$viewerStats[] = array("start_time" => $startTime, "duration" => $duration, "timestamp" => $row['start_time']);
 			$averageDuration += (int) $duration;
 		}
 
 		$averageDuration = intval($averageDuration / ($totalViews - $endTimeNullCnt));
 
 		// return aggregate result
-		return array(   "total_views"=>$totalViews,
-				"average_duration"=>$averageDuration,
-				"end_time_null_count"=>$endTimeNullCnt,
-				"individual_views"=>$viewerStats);
+		return array(
+			"total_views" => $totalViews,
+			"average_duration" => $averageDuration,
+			"end_time_null_count" => $endTimeNullCnt,
+			"individual_views" => $viewerStats
+		);
 	}
 
-        function getNumAnnotations($videoID)
-        {
-          $query = "SELECT * FROM annotations where video_id = '$videoID' and start_time is not NULL";
-          $result = mysql_query($query, $this->link);
-          $totalAnnotations = mysql_num_rows($result);
-          return $totalAnnotations;
-        }
-        
-        function getNumSummaries($videoID)
-        {
-          $query = "SELECT * FROM annotations where video_id = '$videoID' and start_time is NULL";
-          $result = mysql_query($query, $this->link);
-          $totalSummaries = mysql_num_rows($result);
-          return $totalSummaries;
-        }
+	function getNumAnnotations($videoID)
+	{
+		$query = "SELECT * FROM annotations where video_id = '$videoID' and start_time is not NULL";
+		$result = mysql_query($query, $this->link);
+		$totalAnnotations = mysql_num_rows($result);
+		return $totalAnnotations;
+	}
 
-        function getUniqueUsers($videoID)
-        {
-          $query = "SELECT DISTINCT(user_id) FROM annotations where video_id = '$videoID'";
-          $result = mysql_query($query, $this->link);
-          $uniqueUsers = mysql_num_rows($result);
-          return $uniqueUsers;
+	function getNumSummaries($videoID)
+	{
+		$query = "SELECT * FROM annotations where video_id = '$videoID' and start_time is NULL";
+		$result = mysql_query($query, $this->link);
+		$totalSummaries = mysql_num_rows($result);
+		return $totalSummaries;
+	}
 
-        }
+	function getUniqueUsers($videoID)
+	{
+		$query = "SELECT DISTINCT(user_id) FROM annotations where video_id = '$videoID'";
+		$result = mysql_query($query, $this->link);
+		$uniqueUsers = mysql_num_rows($result);
+		return $uniqueUsers;
+	}
 
-        function getEnrolledUsers($groupID)
-        {
-         $query = "select * from groupMembers where group_id = '$groupID'";
-         $result = mysql_query($query, $this->link);
-         $enrolledUsers = mysql_num_rows($result);
-         return $enrolledUsers; 
-
-        }
+	function getEnrolledUsers($groupID)
+	{
+		$query = "select * from groupMembers where group_id = '$groupID'";
+		$result = mysql_query($query, $this->link);
+		$enrolledUsers = mysql_num_rows($result);
+		return $enrolledUsers;
+	}
 
 
-       function getPlayStatistics($videoID)
-       {
-                $query = "SELECT DISTINCT * FROM playEvent where video_id like '$videoID'";
-                $result = mysql_query($query, $this->link);
+	function getPlayStatistics($videoID)
+	{
+		$query = "SELECT DISTINCT * FROM playEvent where video_id like '$videoID'";
+		$result = mysql_query($query, $this->link);
 
-                while($row = mysql_fetch_assoc($result))
-                {
-                  $user_name = $row['user_name'];
-                  $event_type = $row['event_type'];
-                  $video_id = $row['video_id'];
-                  $play_start_position = $row['play_start_position'];
-                  $event_time = $row['event_time'];   
-                }
-                        
-                
-                return array(   "user_name"=>$user_name,
-                                "event_type"=>$event_type,
-                                "video_id"=>$video_id,
-                                "play_start_position"=>$play_start_position,
-                                "event_time"=>$event_time);
+		while ($row = mysql_fetch_assoc($result)) {
+			$user_name = $row['user_name'];
+			$event_type = $row['event_type'];
+			$video_id = $row['video_id'];
+			$play_start_position = $row['play_start_position'];
+			$event_time = $row['event_time'];
+		}
 
-               
-       }
 
-    
+		return array(
+			"user_name" => $user_name,
+			"event_type" => $event_type,
+			"video_id" => $video_id,
+			"play_start_position" => $play_start_position,
+			"event_time" => $event_time
+		);
+	}
+
+
 
 	function removeAllUsersFromVideo($videoID)
 	{
@@ -463,7 +470,7 @@ EOT;
 		return $videoIDs;
 	}
 
-	function conversionComplete($videoID, $conversion_complete=1)
+	function conversionComplete($videoID, $conversion_complete = 1)
 	{
 		$query = "UPDATE media SET conversion_complete=$conversion_complete WHERE video_id like '$videoID'";
 
@@ -494,7 +501,6 @@ EOT;
 		mysql_query("UNLOCK TABLES");
 
 		return $insertID;
-
 	}
 
 	function updateMedia($videoID, $duration, $thumbnailURL, $uploadComplete, $conversionComplete)
@@ -530,10 +536,10 @@ EOT;
 		}
 	}
 
-	function deleteMedia($videoID, $ownerID=null)
+	function deleteMedia($videoID, $ownerID = null)
 	{
 		// confirm ownership
-		if (! $this->userOwnsMedia($videoID, $ownerID)) return;
+		if (!$this->userOwnsMedia($videoID, $ownerID)) return;
 
 		$query = "DELETE FROM media WHERE video_id like '$videoID'";
 		$result = mysql_query($query, $this->link);
@@ -545,18 +551,15 @@ EOT;
 		$result = mysql_query($query, $this->link);
 		//print "query: $query<br />";
 		if (!$result) die('Invalid query (deleteMedia): query: ' . $query . 'error: ' . mysql_error());
-
 	}
 
-        function addMedia($videoID, $userID, $title, $description, $duration, $point1, $point2, $point3)
-        {
-                $query = "INSERT INTO media values ('$videoID', '$userID', '$title', '$description', '$duration', 'https://img.youtube.com/vi/$videoID/default.jpg', '1', '1', current_timestamp, '$point1', '$point2', '$point3')";
-                $result = mysql_query($query, $this->link);
-                if (!$result) die('Invalid query (addMedia): ' . mysql_error());
-                  
-  
-        }
-       
+	function addMedia($videoID, $userID, $title, $description, $duration, $point1, $point2, $point3)
+	{
+		$query = "INSERT INTO media values ('$videoID', '$userID', '$title', '$description', '$duration', 'https://img.youtube.com/vi/$videoID/default.jpg', '1', '1', current_timestamp, '$point1', '$point2', '$point3')";
+		$result = mysql_query($query, $this->link);
+		if (!$result) die('Invalid query (addMedia): ' . mysql_error());
+	}
+
 
 
 
@@ -566,7 +569,7 @@ EOT;
 		//print_r($authorizedVideos);
 
 		$query = "SELECT * FROM media WHERE video_id like '$videoID'";
-		if (! is_null($authorizedVideos)) {
+		if (!is_null($authorizedVideos)) {
 			$authorizedVideos = implode(",", $authorizedVideos);
 			$query .= " OR video_id IN ($authorizedVideos)";
 		}
@@ -586,7 +589,8 @@ EOT;
 		return $row;
 	}
 
-	function getProperty($videoID, $property) {
+	function getProperty($videoID, $property)
+	{
 		// TODO: check that property exists
 		$query = "SELECT * FROM media WHERE video_id like '$videoID'";
 		$result = mysql_query($query, $this->link);
@@ -594,12 +598,12 @@ EOT;
 
 		$row = mysql_fetch_assoc($result);
 		return stripslashes($row[$property]);
-
 	}
 
-	function getVideosOwnedBy($ownerID) {
+	function getVideosOwnedBy($ownerID)
+	{
 		$videos = null;
-		 
+
 		// get all the videos you own
 		$query = "SELECT * FROM media WHERE uploaded_by_user_id = $ownerID ORDER BY creation_date";
 
@@ -607,8 +611,7 @@ EOT;
 		$result = mysql_query($query, $this->link);
 		if (!$result) {
 			print('Invalid query ( getVideosOwnedBy() ) ' . mysql_error() . '<br/>');
-		}
-		else {
+		} else {
 			while ($row = mysql_fetch_assoc($result)) {
 				$row['description']     = stripslashes($row['description']);
 				$row['title']           = stripslashes($row['title']);
@@ -628,14 +631,13 @@ EOT;
 		$result = mysql_query($query, $this->link);
 		if (!$result) {
 			print('Invalid query ( getVideosOwnedBy() ) ' . mysql_error() . '<br/>');
-		}
-		else {
+		} else {
 			while ($row = mysql_fetch_assoc($result)) {
 				$videoIDs[] = $row['video_id'];
 			}
 			//print_r($videoIDs);
 
-			if (! empty($videoIDs)) {
+			if (!empty($videoIDs)) {
 				foreach ($videoIDs as $videoID) {
 					$query = "SELECT * FROM media WHERE video_id like '$videoID'";
 					//print "query:$query";
@@ -662,7 +664,7 @@ EOT;
 		//print_r($authorizedVideos);
 
 		$query = "SELECT * FROM media WHERE uploaded_by_user_id = $userID";
-		if (! is_null($authorizedVideos)) {
+		if (!is_null($authorizedVideos)) {
 			$authorizedVideos = implode(",", $authorizedVideos);
 			$query .= " OR video_id IN ($authorizedVideos)";
 		}
@@ -697,7 +699,7 @@ EOT;
 		//print "query: $query<br />";
 		if (!$result) die('Invalid query ( getMediaURL() ) ' . mysql_error());
 		$row = mysql_fetch_assoc($result);
-		$status = array('upload_complete'=> $row['upload_complete'], 'conversion_complete'=> $row['conversion_complete']);
+		$status = array('upload_complete' => $row['upload_complete'], 'conversion_complete' => $row['conversion_complete']);
 
 		//print_r($media);
 		return $status;
@@ -737,7 +739,8 @@ EOT;
 		// mysql_close($this->link);
 	}
 
-	function getAllVideoIDs() {
+	function getAllVideoIDs()
+	{
 		$query = "SELECT video_id FROM media";
 		$result = mysql_query($query, $this->link);
 		//print "query: $query<br />";

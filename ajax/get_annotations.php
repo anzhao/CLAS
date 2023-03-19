@@ -29,15 +29,15 @@ $jsonString;
 // TODO: this bit is redundant
 // annotation ownership property
 if (count($annotations) > 0) {
-    foreach ($annotations as $key=>$val) {
-		
-    	//print "key:$key<br />";
+    foreach ($annotations as $key => $val) {
+
+        //print "key:$key<br />";
         if ($userID == $annotations[$key]['user_id']) {
             $annotations[$key]['my_annotation'] = "true";
         } else {
             $annotations[$key]['my_annotation'] = "false";
         }
-        
+
         // automatically make links clickable (while stripping out everything else to prevent XSS)
         $annotations[$key]['description_with_html'] = makeLinksClickable($annotations[$key]['description']);
     }

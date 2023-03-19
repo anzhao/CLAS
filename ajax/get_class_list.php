@@ -12,6 +12,6 @@ $classID = $_GET['class_id'];
 
 $user           = new users();
 $classList      = $user->getClassList($classID);
-$user->close(); 
+$user->close();
 
 print json_encode($classList);
