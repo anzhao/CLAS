@@ -1,9 +1,0 @@
-"start time",name,type,role,tags,description
-00:03:38,"Eric Chu Hou Liu",annotation,student,,"That is awesome!!"
-----,"Eric Chu Hou Liu",comment,student,,"Decimal to Binary -  Divide by 2 and keep remainderBinary to Octal - Compute binary in batches of 3 bitsBinary to Hexadecimal - Compute binary in batches of 4 bitsOctal/Hexadecimal to Binary - Convert value into 3/4 bits of binary representation"
-----,"Vincent Yao Wu",comment,student,summary,"describes how to translate numbers from base 10 to base 2 then from base 2 to base  8 by taking groups of three from the left hand size and finding the remainder from the base two, and base 16 which is similar to bse 8 but taking groups of four. with the last note of why they are used"
-00:01:18,"Vincent Yao Wu",annotation,student,,"The weight of the bits in a sequence of them"
-00:06:08,"Vincent Yao Wu",annotation,student,,octal
-00:09:16,"Vincent Yao Wu",annotation,student,,"Hexadecimal digits abbreviate four binary bits"
-----,"Jonathan Kit Heng Chim",comment,student,,"Base 10 (numerical): 0-9Base 2(binary): 0,1Base 8(octal): 0-7Base 16: 0-9 A-F10 to 2 Divide the number by two and use the remainder to find the others.2 to 8 Chop up the binaries into 3bit columns then in here, convert it into base 10s.2 to 16 Ditto for above except that you divide it into 4bits instead of 3. Also when its over 9, continue it by adding A-F."
-00:05:47,"Jonathan Kit Heng Chim",annotation,student,,"Note to headphone guys: there's a mic bump here."
