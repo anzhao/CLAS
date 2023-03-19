@@ -1,6 +1,6 @@
 # CLAS
 **
- /*  OVAL (Online Video Annotation for Learning) is a video annotation tool
+ /*  CLAS (Collaborative Learning Annotation System) is a video annotation tool
  *  that allows users to make annotations on videos uploaded to the platform.
  *
  *  Copyright (C) 2014  Shane Dawson, University of South Australia, Australia
