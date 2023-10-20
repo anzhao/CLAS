@@ -1,3 +1,4 @@
+// A new enhanced interface
 var annotationTimeModified = false;
 var annotationDialogOpen = false;
 var viewAllAnnotations = true;		// should default to true because students should see instructor's and TA's comment and vice versa.
